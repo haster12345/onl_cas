@@ -2,6 +2,8 @@ from flask import Flask
 
 app = Flask(__name__)
 
+import random
+
 class BlackjackGame:
     def __init__(self):
         self.deck = self.generate_deck()
@@ -15,10 +17,14 @@ class BlackjackGame:
         return deck
 
     def deal_initial_cards(self):
+        random.shuffle(self.deck)
         self.player_hand = [self.draw_card(), self.draw_card()]
         self.dealer_hand = [self.draw_card(), self.draw_card()]
 
     def draw_card(self):
+        if not self.deck:
+            self.deck = self.generate_deck()
+            random.shuffle(self.deck)
         return self.deck.pop()
 
     def calculate_score(self, hand):
@@ -49,3 +55,10 @@ def start_blackjack_game():
     game = BlackjackGame()
     game.deal_initial_cards()
     return game
+
+if __name__ == "__main__":
+    game = start_blackjack_game()
+    print("Player hand:", game.player_hand)
+    print("Dealer hand:", game.dealer_hand)
+    print("Player score:", game.calculate_score(game.player_hand))
+    print("Dealer score:", game.calculate_score(game.dealer_hand))
